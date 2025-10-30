@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>@yield('title', 'AdminLTE - Dilesin')</title>
 
-  @vite([ 'resources/js/app.js'])
+  {{-- Use Vite if the manifest exists (production build) otherwise fall back to plain assets so the page doesn't throw when manifest.json is missing --}}
+  @if (file_exists(public_path('build/manifest.json')))
+    @vite(['resources/js/app.js'])
+  @else
+    {{-- Fallback: use CDN for quick styling and scripts while the Vite build/manifest is missing.
+         If you later run `npm run build` the @vite() call will take over. --}}
+    <!-- CSS: Bootstrap + AdminLTE from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    {{-- Optional local app css (will be used if present) --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <!-- JS: jQuery, Bootstrap, AdminLTE (deferred) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js" defer></script>
+    {{-- Optional local app js (will be used if present) --}}
+    <script src="{{ asset('js/app.js') }}" defer></script>
+  @endif
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
